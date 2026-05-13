@@ -131,11 +131,11 @@ const Dashboard = () => {
 
         {/* Resume Generator */}
         <div
-          onClick={() => navigate('/resume-generator')}
+          onClick={() => navigate('/revision')}
           className="cursor-pointer bg-white border border-slate-200 p-6 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition"
         >
-          <h2 className="text-xl font-bold text-slate-800">✨ Resume Generator</h2>
-          <p className="text-sm text-slate-500 mt-2">Create professional resume</p>
+          <h2 className="text-xl font-bold text-slate-800">✨ Revision Notes</h2>
+          <p className="text-sm text-slate-500 mt-2">Generate Last Minute Revision Notes</p>
         </div>
 
       </div>
