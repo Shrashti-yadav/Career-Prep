@@ -1,0 +1,53 @@
+import asyncio
+import logging
+
+import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
+
+genai.configure(api_key=settings.GEMINI_API_KEY)
+
+_llm = genai.GenerativeModel(settings.GEMINI_MODEL)
+
+
+@retry(wait=wait_exponential(min=2, max=20), stop=stop_after_attempt(3), reraise=True)
+async def call_llm(prompt: str, temperature: float = 0.4, json_mode: bool = False) -> str:
+    """
+    Non-blocking Gemini call wrapped in a thread pool.
+    Uses asyncio.sleep for rate-limit buffer — never blocks the event loop.
+    """
+    await asyncio.sleep(0.5)
+
+    generation_config = GenerationConfig(
+        temperature=temperature,
+        response_mime_type="application/json" if json_mode else "text/plain",
+    )
+
+    response = await asyncio.to_thread(
+        _llm.generate_content,
+        prompt,
+        generation_config=generation_config,
+    )
+
+    if not response or not response.text:
+        raise ValueError("Empty response received from Gemini")
+
+    return response.text.strip()
+
+
+async def embed_text(text: str) -> list[float]:
+    """
+    Generate a text embedding via Gemini embedding model.
+    Used by the RAG layer to index/query resume content.
+    """
+    result = await asyncio.to_thread(
+        genai.embed_content,
+        model=settings.GEMINI_EMBEDDING_MODEL,
+        content=text,
+        task_type="retrieval_document",
+    )
+    return result["embedding"]

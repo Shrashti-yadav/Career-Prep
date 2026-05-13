@@ -1,0 +1,35 @@
+# ===== BACKEND (Node.js / Python) =====
+backend/node_modules/
+backend/.env
+backend/.env.local
+backend/dist/
+backend/__pycache__/
+backend/*.pyc
+
+# ===== FRONTEND (React / Next.js / Vite) =====
+frontend/node_modules/
+frontend/.env
+frontend/.env.local
+frontend/.next/
+frontend/dist/
+frontend/build/
+
+# ===== AI SERVICE (Python) =====
+ai_service/__pycache__/
+ai_service/*.pyc
+ai_service/.env
+ai_service/venv/
+ai_service/.venv/
+ai_service/*.model
+ai_service/*.pkl
+
+
+ai-service/venv/
+ai-service/__pycache__/
+ai-service/data/faiss_index/
+ai-service/.env
+# ===== COMMON =====
+.DS_Store
+Thumbs.db
+*.log
+.env
