@@ -2,6 +2,8 @@ import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";
 
+
+const aiBaseUrl = process.env.AI_SERVICE_URL || "http://127.0.0.1:8000";
 const analyzeResume = async (req, res) => {
   try {
 
@@ -40,7 +42,7 @@ const analyzeResume = async (req, res) => {
     formData.append("role", role);
 
     const response = await axios.post(
-      "http://127.0.0.1:8000/analyze-resume",
+      `${aiBaseUrl}/analyze-resume`,
       formData,
       {
         headers: {

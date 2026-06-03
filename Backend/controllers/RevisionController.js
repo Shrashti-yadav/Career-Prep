@@ -2,7 +2,8 @@
 import axios from "axios";
 import { RevisionNotes } from "../models/historyModels.js";
 
-const PYTHON_URL = "http://localhost:8000";
+//const PYTHON_URL = "http://localhost:8000";
+const PYTHON_URL = process.env.AI_SERVICE_URL || "http://localhost:8000";
 
 export const generateRevisionNotes = async (req, res) => {
   try {

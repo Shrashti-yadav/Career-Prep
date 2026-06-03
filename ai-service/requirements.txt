@@ -4,8 +4,8 @@ python-dotenv
 pydantic
 langchain
 langgraph
-google-generativeai
-openai-whisper
+google-genai
 pydub
 ffmpeg-python
-ffmpeg 
+ffmpeg
+python-docx
