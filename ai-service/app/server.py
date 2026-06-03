@@ -35,8 +35,8 @@ def create_app() -> FastAPI:
 
     @app.on_event("startup")
     async def startup():
-        logger.info("Loading Whisper model...")
-        load_whisper()
+        #logger.info("Loading Whisper model...")
+        #load_whisper()
         logger.info("Loading FAISS index...")
         load_index()
         logger.info("Service ready.")
