@@ -55,6 +55,31 @@ const RevisionNotes = () => {
       setNotes(data.notes);
       setRawNotes(data.raw_notes);       // ✅ save raw notes for PDF
       setQuizQuestions(data.quiz || []);
+
+//       setNotes(data.notes);
+// setRawNotes(data.raw_notes);
+// setQuizQuestions(data.quiz || []);
+
+// ✅ Save to history
+try {
+  const user = JSON.parse(localStorage.getItem("user"));
+  await fetch("http://localhost:5000/api/history/notes", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user?.token}`,
+    },
+    body: JSON.stringify({
+      topic: data.notes.topic,
+      summary: data.notes.summary,
+      keyPoints: data.notes.keyPoints,
+      tips: data.notes.tips,
+      quiz: data.quiz || [],
+    }),
+  });
+} catch (err) {
+  console.warn("Failed to save notes history:", err.message);
+}
     } catch (err) {
       setError(err.message);
     } finally {

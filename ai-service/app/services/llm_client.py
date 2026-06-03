@@ -13,6 +13,8 @@ genai.configure(api_key=settings.GEMINI_API_KEY)
 
 _llm = genai.GenerativeModel(settings.GEMINI_MODEL)
 
+print("USING MODEL:", settings.GEMINI_MODEL)
+
 
 @retry(wait=wait_exponential(min=2, max=20), stop=stop_after_attempt(3), reraise=True)
 async def call_llm(prompt: str, temperature: float = 0.4, json_mode: bool = False) -> str:
@@ -25,6 +27,7 @@ async def call_llm(prompt: str, temperature: float = 0.4, json_mode: bool = Fals
     generation_config = GenerationConfig(
         temperature=temperature,
         response_mime_type="application/json" if json_mode else "text/plain",
+        max_output_tokens=8192,  # ← prevents truncated JSON
     )
 
     response = await asyncio.to_thread(

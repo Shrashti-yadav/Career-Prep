@@ -1,9 +1,25 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { createSession, getSessions, reset, deleteSession } from '../features/sessions/sessionSlice';
-import { toast } from 'react-toastify';
-import SessionCard from "../components/SessionCard";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import {
+  createSession,
+  getSessions,
+  reset,
+  deleteSession,
+} from "../features/sessions/sessionSlice";
+
+import {
+  Brain,
+  FileText,
+  BookOpen,
+  Sparkles,
+  Clock,
+  Trash2,
+} from "lucide-react";
+
+import AnimatedBackground from "../Components/AnimatedBackground";
 
 const ROLES = [
   "MERN Stack Developer",
@@ -13,24 +29,17 @@ const ROLES = [
   "Frontend Developer",
   "Backend Developer",
   "Data Scientist",
-  "Data Analyst",
   "Machine Learning Engineer",
   "DevOps Engineer",
-  "Cloud Engineer (AWS/Azure/GCP)",
-  "Cybersecurity Engineer",
-  "Blockchain Developer",
-  "Mobile Developer (iOS/Android)",
-  "Game Developer",
-  "UI/UX Designer",
-  "QA Automation Engineer",
-  "Product Manager"
 ];
 
 const LEVELS = ["Junior", "Mid-Level", "Senior"];
+
 const TYPES = [
-  { label: 'Oral only', value: 'oral-only' },
-  { label: 'Coding Mix', value: 'coding-mix' }
+  { label: "Oral only", value: "oral-only" },
+  { label: "Coding Mix", value: "coding-mix" },
 ];
+
 const COUNTS = [5, 10, 15];
 
 const Dashboard = () => {
@@ -38,12 +47,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
-  const { sessions, isLoading, isGenerating, isError, message } = useSelector((state) => state.sessions);
 
-  const isProcessing = isGenerating;
+  const { sessions, isLoading, isGenerating, isError, message } =
+    useSelector((state) => state.sessions);
 
   const [formData, setFormData] = useState({
-    role: user.preferredRole || ROLES[0],
+    role: ROLES[0],
     level: LEVELS[0],
     interviewType: TYPES[1].value,
     count: COUNTS[0],
@@ -60,152 +69,361 @@ const Dashboard = () => {
     }
   }, [isError, message, dispatch]);
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createSession(formData));
   };
 
-  const viewSession = (session) => {
-    if (session.status === 'completed') {
+  const handleViewSession = (session) => {
+    if (session.status === "completed") {
       navigate(`/review/${session._id}`);
-    } else if (session.status === 'in-progress') {
+    } else if (session.status === "in-progress") {
       navigate(`/interview/${session._id}`);
     } else {
-      toast.info('Session not ready yet');
+      toast.info("Session not ready yet");
     }
   };
 
-  const handleDelete = (e, sessionId) => {
+  const handleDelete = (e, id) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this session?')) {
-      dispatch(deleteSession(sessionId));
-      toast.error('Session Deleted');
+
+    if (window.confirm("Delete this session?")) {
+      dispatch(deleteSession(id));
+      toast.success("Session deleted");
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12 space-y-10 animate-in duration-700">
+    <div className="min-h-screen">
+      <AnimatedBackground variant="dashboard" />
 
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-        <div>
-          <h1 className="text-2xl sm:text-4xl font-black text-slate-900">
-            Welcome, <span className="text-teal-600">{user.name.split(' ')[0]}</span>
-          </h1>
-          <p className="text-slate-500 mt-1">Ready for your technical prep?</p>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+              Welcome back,{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                {user?.name?.split(" ")[0]}
+              </span>
+            </h1>
+
+            <p className="text-slate-500 mt-2 text-sm sm:text-base">
+              Practice smarter and crack your next interview 🚀
+            </p>
+          </div>
         </div>
 
-        <div className="bg-teal-50 px-4 py-2 rounded-2xl border border-teal-100">
-          <p className="text-xs text-teal-600 font-bold uppercase">Total Sessions</p>
-          <p className="text-2xl font-black text-teal-700">{sessions.length}</p>
-        </div>
-      </div>
+        {/* QUICK ACTIONS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-      {/* 🔥 FEATURE CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        {/* AI Interview */}
-        <div
-          onClick={() => document.getElementById("interview-section").scrollIntoView({ behavior: "smooth" })}
-          className="cursor-pointer bg-gradient-to-br from-teal-500 to-teal-700 text-white p-6 rounded-2xl shadow-lg hover:scale-105 transition"
-        >
-          <h2 className="text-xl font-bold">🎤 AI Interview</h2>
-          <p className="text-sm opacity-90 mt-2">Practice real interview questions</p>
-        </div>
-
-        {/* Resume Analysis */}
-        <div
-          onClick={() => navigate('/resume-analysis')}
-          className="cursor-pointer bg-white border border-slate-200 p-6 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition"
-        >
-          <h2 className="text-xl font-bold text-slate-800">📄 Resume Analysis</h2>
-          <p className="text-sm text-slate-500 mt-2">Check ATS score & suggestions</p>
-        </div>
-
-        {/* Resume Generator */}
-        <div
-          onClick={() => navigate('/revision')}
-          className="cursor-pointer bg-white border border-slate-200 p-6 rounded-2xl shadow hover:shadow-lg hover:scale-105 transition"
-        >
-          <h2 className="text-xl font-bold text-slate-800">✨ Revision Notes</h2>
-          <p className="text-sm text-slate-500 mt-2">Generate Last Minute Revision Notes</p>
-        </div>
-
-      </div>
-
-      {/* INTERVIEW FORM */}
-      <div id="interview-section" className="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
-        <div className="bg-slate-900 px-6 py-5">
-          <h2 className="text-lg font-bold text-white flex items-center">
-            <span className="bg-teal-500 w-1.5 h-5 rounded-full mr-3"></span>
-            New Interview
-          </h2>
-        </div>
-
-        <form onSubmit={onSubmit} className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
-
-          <select name="role" value={formData.role} onChange={onChange} className="input">
-            {ROLES.map((role) => <option key={role}>{role}</option>)}
-          </select>
-
-          <select name="level" value={formData.level} onChange={onChange} className="input">
-            {LEVELS.map((level) => <option key={level}>{level}</option>)}
-          </select>
-
-          <select name="count" value={formData.count} onChange={onChange} className="input">
-            {COUNTS.map((count) => <option key={count}>{count} Qs</option>)}
-          </select>
-
-          <select name="interviewType" value={formData.interviewType} onChange={onChange} className="input">
-            {TYPES.map((type) => <option key={type.value} value={type.value}>{type.label}</option>)}
-          </select>
-
-          <button
-            type="submit"
-            disabled={isProcessing}
-            className={`h-[48px] rounded-xl font-bold text-white ${isProcessing ? 'bg-slate-300' : 'bg-teal-600 hover:bg-teal-700'}`}
+          {/* AI Interview */}
+          <div
+            onClick={() =>
+              document
+                .getElementById("interview-form")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="group cursor-pointer rounded-2xl border border-slate-200/70 
+                       bg-gradient-to-br from-blue-500 to-indigo-600
+                       p-6 text-white hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
           >
-            {isProcessing ? "Generating..." : "Start Interview"}
-          </button>
+            <Brain className="w-8 h-8 mb-4" />
 
-        </form>
+            <h3 className="text-xl font-bold mb-2">
+              AI Interview
+            </h3>
+
+            <p className="text-blue-100 text-sm">
+              Start practicing with AI-generated questions
+            </p>
+          </div>
+
+          {/* Resume */}
+          <div
+            onClick={() => navigate("/resume-analysis")}
+            className="group cursor-pointer rounded-2xl border border-slate-200/70 
+                       bg-white dark:bg-slate-900
+                       p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+          >
+            <FileText className="w-8 h-8 mb-4 text-violet-600" />
+
+            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+              Resume Analysis
+            </h3>
+
+            <p className="text-slate-500 text-sm">
+              Check ATS score and improve your resume
+            </p>
+          </div>
+
+          {/* Revision */}
+          <div
+            onClick={() => navigate("/revision")}
+            className="group cursor-pointer rounded-2xl border border-slate-200/70 
+                       bg-white dark:bg-slate-900
+                       p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+          >
+            <BookOpen className="w-8 h-8 mb-4 text-emerald-600" />
+
+            <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
+              Revision Notes
+            </h3>
+
+            <p className="text-slate-500 text-sm">
+              Generate last-minute study notes instantly
+            </p>
+          </div>
+
+        </div>
+
+        {/* CREATE INTERVIEW */}
+        <div
+          id="interview-form"
+          className="rounded-3xl overflow-hidden border border-slate-200/70 
+                     bg-white/90 dark:bg-slate-900/90 
+                     backdrop-blur-xl shadow-2xl"
+        >
+
+          {/* TOP HEADER */}
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5">
+
+            <div className="flex items-center gap-3 text-white">
+              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                <Sparkles className="w-5 h-5" />
+              </div>
+
+              <div>
+                <h2 className="text-xl font-bold">
+                  Create Interview Session
+                </h2>
+
+                <p className="text-blue-100 text-sm">
+                  Customize your interview experience
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* FORM */}
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              {/* ROLE */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Select Role
+                </label>
+
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                             bg-white dark:bg-slate-900
+                             px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* LEVEL */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Experience Level
+                </label>
+
+                <select
+                  name="level"
+                  value={formData.level}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                             bg-white dark:bg-slate-900
+                             px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {LEVELS.map((l) => (
+                    <option key={l}>{l}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* COUNT */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Questions
+                </label>
+
+                <select
+                  name="count"
+                  value={formData.count}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                             bg-white dark:bg-slate-900
+                             px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {COUNTS.map((c) => (
+                    <option key={c} value={c}>
+                      {c} Questions
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* TYPE */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Interview Type
+                </label>
+
+                <select
+                  name="interviewType"
+                  value={formData.interviewType}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-slate-300 dark:border-slate-700
+                             bg-white dark:bg-slate-900
+                             px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+            </div>
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              disabled={isGenerating}
+              className="mt-8 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600
+                         hover:from-blue-700 hover:to-indigo-700
+                         text-white py-3.5 font-semibold text-lg
+                         shadow-lg hover:shadow-xl transition-all"
+            >
+              {isGenerating ? "Generating..." : "Start Interview"}
+            </button>
+
+          </form>
+        </div>
+
+        {/* SESSION HISTORY */}
+        <div>
+
+          <h2 className="text-2xl font-bold flex items-center gap-2 mb-5 text-slate-800 dark:text-white">
+            <Clock className="w-6 h-6" />
+            Interview History
+          </h2>
+
+          {isLoading ? (
+            <p className="text-slate-500">Loading...</p>
+          ) : sessions?.length === 0 ? (
+            <div className="rounded-2xl border border-dashed p-10 text-center bg-white/70 dark:bg-slate-900/70">
+              <p className="text-slate-500">
+                No interview sessions yet
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+
+              {sessions.map((session) => (
+                <div
+                  key={session._id}
+                  onClick={() => handleViewSession(session)}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200/60 
+                             bg-gradient-to-br from-white via-blue-50/40 to-indigo-50/30
+                             dark:from-slate-900 dark:via-slate-900 dark:to-slate-800
+                             p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                >
+
+                  {/* Gradient Glow */}
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
+
+                  <div className="relative flex items-center justify-between">
+
+                    {/* LEFT */}
+                    <div className="space-y-2">
+
+                      <h3 className="text-lg font-bold text-slate-800 dark:text-white">
+                        {session.role}
+                      </h3>
+
+                      <div className="flex items-center gap-2 flex-wrap">
+
+                        {/* LEVEL */}
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold
+                          ${
+                            session.level === "Senior"
+                              ? "bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300"
+                              : session.level === "Mid-Level"
+                              ? "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300"
+                              : "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+                          }`}
+                        >
+                          {session.level}
+                        </span>
+
+                        {/* STATUS */}
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium
+                          ${
+                            session.status === "completed"
+                              ? "bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-300"
+                              : "bg-orange-100 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300"
+                          }`}
+                        >
+                          {session.status}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    {/* RIGHT */}
+                    <div className="flex items-center gap-3">
+
+                      {/* ICON */}
+                      <div className="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg">
+                        <Brain className="w-5 h-5" />
+                      </div>
+
+                      {/* DELETE */}
+                      <button
+                        onClick={(e) => handleDelete(e, session._id)}
+                        className="flex items-center gap-1 px-3 py-2 rounded-lg
+                                   bg-red-50 hover:bg-red-100
+                                   dark:bg-red-500/10 dark:hover:bg-red-500/20
+                                   text-red-600 dark:text-red-400
+                                   transition"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+
+            </div>
+          )}
+        </div>
+
       </div>
-
-      {/* HISTORY */}
-      <div className="space-y-6 pb-20">
-        <h2 className="text-2xl font-black text-slate-800 flex items-center">
-          📊 Interview History
-        </h2>
-
-        {isLoading && sessions.length === 0 ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin h-12 w-12 border-t-2 border-teal-500 rounded-full"></div>
-          </div>
-        ) : sessions.length === 0 ? (
-          <div className="bg-slate-50 border-dashed border-2 rounded-2xl py-16 text-center">
-            <p className="text-slate-400 font-bold">No sessions yet.</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {sessions.map((session) => (
-              <SessionCard
-                key={session._id}
-                session={session}
-                onClick={viewSession}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
     </div>
   );
 };

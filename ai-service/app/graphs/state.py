@@ -11,6 +11,9 @@ class ResumeState(TypedDict):
     ats_score: float
     similar_past_analyses: list[dict]
     raw_llm_response: str
+    # ── NEW: self-RAG & explainable-RAG ──────────
+    score_explanation: Optional[dict]   # explainable_rag_node output
+    # ─────────────────────────────────────────────
     # human-in-loop review fields
     human_approved: Optional[bool]
     human_notes: Optional[str]
