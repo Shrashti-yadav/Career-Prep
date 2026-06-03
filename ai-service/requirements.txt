@@ -10,3 +10,4 @@ ffmpeg-python
 ffmpeg
 python-docx
 faiss-cpu
+python-multipart
