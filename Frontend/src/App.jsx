@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import useSocket from "./hooks/useSocket";
+import useSocket from "./Hooks/useSocket";
 import { ToastContainer } from "react-toastify";
 
 // Layout
