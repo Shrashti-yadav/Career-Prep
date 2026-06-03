@@ -7,9 +7,9 @@ const Footer = () => {
 
   // 🔧 Replace these with your actual links
   const SOCIAL = {
-    github:   "https://github.com/YOUR_USERNAME",
-    linkedin: "https://linkedin.com/in/YOUR_PROFILE",
-    email:    "mailto:support@careerprepai.com",
+    github:   "https://github.com/Shrashti-yadav/Career-Prep",
+    linkedin: "https://www.linkedin.com/in/shrashti-yadav-53b86627a/",
+    email:    "mailto:shrashti262005@gmail.com",
   };
 
   return (
