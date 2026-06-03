@@ -13,6 +13,8 @@ import {
   Quote,
 } from "lucide-react";
 
+
+const API_BASE = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
 
@@ -23,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/feedback");
+        const res = await axios.get(`${API_BASE}/api/feedback`);
         setFeedbacks(res.data?.data || []);
       } catch (err) {
         console.warn("Could not load feedbacks:", err.message);

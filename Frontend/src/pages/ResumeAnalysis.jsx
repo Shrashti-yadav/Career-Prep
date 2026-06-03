@@ -30,6 +30,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+const API_BASE = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
 const ResumeAnalysis = () => {
   const [resumeFile, setResumeFile] = useState(null);
   const [jdFile, setJdFile] = useState(null);
@@ -72,7 +73,7 @@ const ResumeAnalysis = () => {
       if (selectedRole) formData.append("role", selectedRole);
 
       const response = await axios.post(
-        "http://localhost:5000/api/analyze/resume/analyze",
+        `${API_BASE}/api/analyze/resume/analyze`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -89,7 +90,7 @@ const ResumeAnalysis = () => {
 
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        await fetch("http://localhost:5000/api/history/resume", {
+        await fetch(`${API_BASE}/api/history/resume`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

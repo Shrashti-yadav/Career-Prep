@@ -11,7 +11,9 @@ import {
   Trophy,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:8000";
+//const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_AI_URL || "http://localhost:8000";
+const BACKEND_BASE = import.meta.env.VITE_API_URL?.replace("/api", "") || "http://localhost:5000";
 
 const RevisionNotes = () => {
   const [topic, setTopic] = useState("");
@@ -63,7 +65,7 @@ const RevisionNotes = () => {
 // ✅ Save to history
 try {
   const user = JSON.parse(localStorage.getItem("user"));
-  await fetch("http://localhost:5000/api/history/notes", {
+  await fetch(`${BACKEND_BASE}/api/history/notes`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
