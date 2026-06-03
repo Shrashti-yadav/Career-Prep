@@ -11,7 +11,7 @@ import userRoutes from "./routes/userRoutes.js";
 import sessionRoutes from "./routes/sessionRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 
-import resumeHistoryRoutes from "./routes/resumeHistoryRoutes.js";
+import resumeHistoryRoutes from "./routes/resumehistoryRoutes.js";
 //import revisionRoutes from "./routes/revisionRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import notesRoutes from "./routes/notesRoutes.js";
