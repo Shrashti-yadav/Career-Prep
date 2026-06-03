@@ -25,11 +25,16 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+// const allowedOrigin = [
+//   "http://localhost:5173",
+//   "http://localhost:5174",
+// ];
+
 const allowedOrigin = [
   "http://localhost:5173",
   "http://localhost:5174",
-];
-
+  process.env.FRONTEND_URL // Your live production frontend URL (Vercel/Netlify)
+].filter(Boolean);
 // SOCKET IO
 const io = new Server(server, {
   cors: {

@@ -1,18 +1,18 @@
 # ===== BACKEND (Node.js / Python) =====
-backend/node_modules/
-backend/.env
-backend/.env.local
-backend/dist/
-backend/__pycache__/
-backend/*.pyc
+Backend/node_modules/
+Backend/.env
+Backend/.env.local
+Backend/dist/
+Backend/__pycache__/
+Backend/*.pyc
 
 # ===== FRONTEND (React / Next.js / Vite) =====
-frontend/node_modules/
-frontend/.env
-frontend/.env.local
-frontend/.next/
-frontend/dist/
-frontend/build/
+Frontend/node_modules/
+Frontend/.env
+Frontend/.env.local
+Frontend/.next/
+Frontend/dist/
+Frontend/build/
 
 # ===== AI SERVICE (Python) =====
 ai_service/__pycache__/
@@ -33,3 +33,10 @@ ai-service/.env
 Thumbs.db
 *.log
 .env
+Backend/node_modules/
+Backend/.env
+Frontend/node_modules/
+Frontend/dist/
+ai-service/index.faiss
+ai-service/docs.pkl
+ai-service/data/
